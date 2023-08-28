@@ -1,0 +1,96 @@
+body {
+  margin: 0;
+  font-size: 15px;
+  font-family: "Cabin", sans-serif;
+}
+
+.container {
+  background: linear-gradient(to bottom, #f02199, #b0e4fc);
+  min-height: 100vh;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  font-family: "Rubik Iso", cursive;
+  font-size: 55px;
+}
+
+.button {
+  width: 100px;
+  height: 40px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: #ba7201;
+  color: #eceaea;
+  font-weight: 600;
+  letter-spacing: 1px;
+  border: none;
+  /* font-family: "Cabin", sans-serif; */
+  transition: transform 0.3s ease;
+}
+
+.button:hover {
+  transform: scale(1.1);
+}
+
+.level {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+  min-height: 65vh;
+  /* background-color: red; */
+  margin: 0px 30px;
+}
+
+.state-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* margin: 20px; */
+  margin: 20px 50px;
+}
+
+.state {
+  color: #ffffff;
+  padding: 15px 15px;
+  margin: 5px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+}
+
+.state-text {
+  margin: 0px;
+}
+
+.description {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.description-row {
+  display: flex;
+  align-items: center;
+  margin: 12px 0px;
+}
+
+.description-color {
+  width: 25px;
+  height: 25px;
+  /* background-color: red; */
+  margin: 0px 20px;
+}
+
+.description-text {
+  color: #ffffff;
+  letter-spacing: 1px;
+  margin: 0;
+}
