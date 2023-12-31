@@ -3,10 +3,7 @@ import getStateColor from "../utils/getStateColor";
 import Description from "../components/Description";
 import Header from "../components/Header";
 import { ArcherContainer, ArcherElement } from "react-archer";
-import {
-  isConstraintStatisfied,
-  isValidState,
-} from "../utils/constraints";
+import { isConstraintStatisfied, isValidState } from "../utils/constraints";
 import isRecursive from "../utils/isRecursive";
 import createNewState from "../utils/createNewState";
 
@@ -31,6 +28,8 @@ const Content = () => {
     setStateArray([[initialState]]);
   };
 
+  const transitions = ["1C", "2C", "1M 1C", "2M", "1M"];
+
   const generatePossibleState = () => {
     const tempLevel = level + 1;
     const previousLevelStates = [...stateArray[level]];
@@ -39,89 +38,39 @@ const Content = () => {
     let childIndex = 0;
 
     previousLevelStates.forEach((state) => {
-      if (state.isDead || state.isRecursiveState) return;
+      for (const transition of transitions) {
+        if (state.isDead || state.isRecursiveState) return;
 
-      // perform 1C
-      if (!state.boat) {
         let newState = { ...state };
-        newState.C = newState.C - 1;
-        newState.level = newState.level + 1;
-        newState.boat = !newState.boat;
-        if (isValidState(newState)) {
-          if (isConstraintStatisfied(newState)) {
-            if (isRecursive(newState, levelArray, stateArray)) {
-              newState.isRecursiveState = true;
-            }
-          } else {
-            newState.isDead = true;
-          }
-          newState = createNewState(newState, "1C", childIndex, state);
-          childIndex++;
-          levelArray.push(newState);
+        if (transition === "1C") {
+          if (!state.boat) newState.C = newState.C - 1;
+          else newState.C = newState.C + 1;
         }
-      } else {
-        let newState = { ...state };
-        newState.C = newState.C + 1;
-        newState.level = newState.level + 1;
-        newState.boat = !newState.boat;
-        if (isValidState(newState)) {
-          if (isConstraintStatisfied(newState)) {
-            if (isRecursive(newState, levelArray, stateArray)) {
-              newState.isRecursiveState = true;
-            }
-          } else {
-            newState.isDead = true;
-          }
-          newState = createNewState(newState, "1C", childIndex, state);
-          childIndex++;
-          levelArray.push(newState);
+        if (transition === "2C") {
+          if (!state.boat) newState.C = newState.C - 2;
+          else newState.C = newState.C + 2;
         }
-      }
+        if (transition === "1M 1C") {
+          if (!state.boat) {
+            newState.M = newState.M - 1;
+            newState.C = newState.C - 1;
+          } else {
+            newState.M = newState.M + 1;
+            newState.C = newState.C + 1;
+          }
+        }
+        if (transition === "2M") {
+          if (!state.boat) newState.M = newState.M - 2;
+          else newState.M = newState.M + 2;
+        }
+        if (transition === "1M") {
+          if (!state.boat) newState.M = newState.M - 1;
+          else newState.M = newState.M + 1;
+        }
 
-      // perform 2C
-      if (!state.boat) {
-        let newState = { ...state };
-        newState.C = newState.C - 2;
         newState.level = newState.level + 1;
         newState.boat = !newState.boat;
-        if (isValidState(newState)) {
-          if (isConstraintStatisfied(newState)) {
-            if (isRecursive(newState, levelArray, stateArray)) {
-              newState.isRecursiveState = true;
-            }
-          } else {
-            newState.isDead = true;
-          }
-          newState = createNewState(newState, "2C", childIndex, state);
-          childIndex++;
-          levelArray.push(newState);
-        }
-      } else {
-        let newState = { ...state };
-        newState.C = newState.C + 2;
-        newState.level = newState.level + 1;
-        newState.boat = !newState.boat;
-        if (isValidState(newState)) {
-          if (isConstraintStatisfied(newState)) {
-            if (isRecursive(newState, levelArray, stateArray)) {
-              newState.isRecursiveState = true;
-            }
-          } else {
-            newState.isDead = true;
-          }
-          newState = createNewState(newState, "2C", childIndex, state);
-          childIndex++;
-          levelArray.push(newState);
-        }
-      }
 
-      // perform 1M 1C
-      if (!state.boat) {
-        let newState = { ...state };
-        newState.M = newState.M - 1;
-        newState.C = newState.C - 1;
-        newState.level = newState.level + 1;
-        newState.boat = !newState.boat;
         if (isValidState(newState)) {
           if (isConstraintStatisfied(newState)) {
             if (isRecursive(newState, levelArray, stateArray)) {
@@ -130,99 +79,7 @@ const Content = () => {
           } else {
             newState.isDead = true;
           }
-          newState = createNewState(newState, "1M 1C", childIndex, state);
-          childIndex++;
-          levelArray.push(newState);
-        }
-      } else {
-        let newState = { ...state };
-        newState.M = newState.M + 1;
-        newState.C = newState.C + 1;
-        newState.level = newState.level + 1;
-        newState.boat = !newState.boat;
-        if (isValidState(newState)) {
-          if (isConstraintStatisfied(newState)) {
-            if (isRecursive(newState, levelArray, stateArray)) {
-              newState.isRecursiveState = true;
-            }
-          } else {
-            newState.isDead = true;
-          }
-          newState = createNewState(newState, "1M 1C", childIndex, state);
-          childIndex++;
-          levelArray.push(newState);
-        }
-      }
-
-      // perform 2M
-      if (!state.boat) {
-        let newState = { ...state };
-        newState.M = newState.M - 2;
-        newState.level = newState.level + 1;
-        newState.boat = !newState.boat;
-        if (isValidState(newState)) {
-          if (isConstraintStatisfied(newState)) {
-            if (isRecursive(newState, levelArray, stateArray)) {
-              newState.isRecursiveState = true;
-            }
-          } else {
-            newState.isDead = true;
-          }
-          newState = createNewState(newState, "2M", childIndex, state);
-          childIndex++;
-          levelArray.push(newState);
-        }
-      } else {
-        let newState = { ...state };
-        newState.M = newState.M + 2;
-        newState.level = newState.level + 1;
-        newState.boat = !newState.boat;
-        if (isValidState(newState)) {
-          if (isConstraintStatisfied(newState)) {
-            if (isRecursive(newState, levelArray, stateArray)) {
-              newState.isRecursiveState = true;
-            }
-          } else {
-            newState.isDead = true;
-          }
-          newState = createNewState(newState, "2M", childIndex, state);
-          childIndex++;
-          levelArray.push(newState);
-        }
-      }
-
-      // perform 1M
-      if (!state.boat) {
-        let newState = { ...state };
-        newState.M = newState.M - 1;
-        newState.level = newState.level + 1;
-        newState.boat = !newState.boat;
-        if (isValidState(newState)) {
-          if (isConstraintStatisfied(newState)) {
-            if (isRecursive(newState, levelArray, stateArray)) {
-              newState.isRecursiveState = true;
-            }
-          } else {
-            newState.isDead = true;
-          }
-          newState = createNewState(newState, "1M", childIndex, state);
-          childIndex++;
-          levelArray.push(newState);
-        }
-      } else {
-        let newState = { ...state };
-        newState.M = newState.M + 1;
-        newState.level = newState.level + 1;
-        newState.boat = !newState.boat;
-        if (isValidState(newState)) {
-          if (isConstraintStatisfied(newState)) {
-            if (isRecursive(newState, levelArray, stateArray)) {
-              newState.isRecursiveState = true;
-            }
-          } else {
-            newState.isDead = true;
-          }
-          newState = createNewState(newState, "1M", childIndex, state);
+          newState = createNewState(newState, transition, childIndex, state);
           childIndex++;
           levelArray.push(newState);
         }
@@ -248,12 +105,7 @@ const Content = () => {
 
       <Description />
 
-      <ArcherContainer
-        strokeColor='black'
-        // noCurves={true}
-        startMarker={true}
-        endMarker={false}
-      >
+      <ArcherContainer strokeColor='black' startMarker={true} endMarker={false}>
         <div className='level'>
           {stateArray.map((items, parentIndex) => (
             <div key={parentIndex}>
